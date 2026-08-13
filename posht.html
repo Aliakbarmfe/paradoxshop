@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>دستیار هوش مصنوعی پارادوکس</title>
   <style>
     :root {
@@ -21,18 +21,18 @@
     body {
       background-color: var(--bg-black);
       color: #fff;
-      min-height: 100vh;
+      height: 100vh;
+      width: 100vw;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      position: relative;
     }
 
-    /* گوی نارنجی شناور در پس زمینه */
     .glowing-orb {
-      position: absolute;
+      position: fixed;
+      top: 50%;
+      left: 50%;
       width: 350px;
       height: 350px;
       background: radial-gradient(circle, rgba(255, 102, 0, 0.25) 0%, rgba(0,0,0,0) 70%);
@@ -40,21 +40,19 @@
       z-index: 0;
       animation: floatOrb 12s infinite ease-in-out alternate;
       pointer-events: none;
+      transform: translate(-50%, -50%);
     }
 
     @keyframes floatOrb {
-      0% { transform: translate(-150px, -150px) scale(1); }
-      50% { transform: translate(150px, 100px) scale(1.2); }
-      100% { transform: translate(-100px, 150px) scale(0.9); }
+      0% { transform: translate(-150px, -150px); }
+      100% { transform: translate(50px, 100px); }
     }
 
-    /* کانتینر چت */
     .chat-container {
       width: 90%;
       max-width: 500px;
       height: 80vh;
-      background: rgba(15, 15, 15, 0.85);
-      backdrop-filter: blur(10px);
+      background: rgba(15, 15, 15, 0.9);
       border: 2px solid var(--neon-orange);
       box-shadow: 0 0 20px var(--glow-orange);
       border-radius: 16px;
@@ -64,127 +62,103 @@
       position: relative;
     }
 
-    /* هدر */
     .header {
       padding: 15px;
       text-align: center;
       border-bottom: 1px solid var(--neon-orange);
-      font-size: 1.2rem;
-      font-weight: bold;
       color: var(--neon-orange);
-      text-shadow: 0 0 8px var(--glow-orange);
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
+      font-weight: bold;
+      position: relative;
+    }
+
+    /* استایل دکمه خروج */
+    .exit-btn {
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      background: transparent;
+      border: 1px solid var(--neon-orange);
+      color: var(--neon-orange);
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .exit-btn:hover {
+      background: var(--neon-orange);
+      color: #000;
     }
 
     .typing-status {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: #ffaa66;
-      height: 18px;
+      height: 15px;
       visibility: hidden;
+      margin-top: 5px;
     }
 
-    /* باکس پیام‌ها */
     .messages-box {
       flex: 1;
       padding: 15px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     .message {
       max-width: 80%;
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      word-break: break-word;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 0.9rem;
     }
 
-    .message.bot {
-      align-self: flex-start;
-      background: rgba(30, 30, 30, 0.9);
-      border: 1px solid var(--neon-orange);
-      color: #fff;
-      box-shadow: 0 0 5px var(--glow-orange);
-    }
+    .message.bot { align-self: flex-start; background: #222; border: 1px solid var(--neon-orange); }
+    .message.user { align-self: flex-end; background: var(--neon-orange); color: #000; font-weight: bold; }
 
-    .message.user {
-      align-self: flex-end;
-      background: var(--neon-orange);
-      color: #000;
-      font-weight: bold;
-      box-shadow: 0 0 8px var(--glow-orange);
-    }
-
-    /* ورودی پیام */
     .input-box {
-      padding: 12px;
+      padding: 10px;
       border-top: 1px solid var(--neon-orange);
       display: flex;
-      gap: 10px;
+      gap: 5px;
     }
 
     input[type="text"] {
       flex: 1;
       background: #000;
       border: 1px solid var(--neon-orange);
-      padding: 10px 15px;
-      border-radius: 8px;
+      padding: 8px;
       color: #fff;
+      border-radius: 5px;
       outline: none;
-      box-shadow: inset 0 0 5px var(--glow-orange);
     }
 
-    input[type="text"]:disabled {
-      background: #1a1a1a;
-      cursor: not-allowed;
-      border-color: #555;
-    }
-
-    button {
+    button#sendBtn {
       background: var(--neon-orange);
-      color: #000;
       border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
+      padding: 8px 15px;
+      border-radius: 5px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 0 10px var(--glow-orange);
-      transition: all 0.2s ease;
-    }
-
-    button:hover:not(:disabled) {
-      transform: scale(1.03);
-      box-shadow: 0 0 15px var(--neon-orange);
-    }
-
-    button:disabled {
-      background: #444;
-      color: #888;
-      box-shadow: none;
-      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
 
-  <!-- افکت نئونی شناور پس زمینه -->
   <div class="glowing-orb"></div>
 
   <div class="chat-container">
     <div class="header">
-      <span>دستیار هوش مصنوعی پارادوکس</span>
+      <!-- دکمه خروج اضافه شد -->
+      <button class="exit-btn" onclick="window.location.href='index.html'">خروج</button>
+      <div>دستیار هوش مصنوعی پارادوکس</div>
       <div id="typingStatus" class="typing-status">در حال تایپ کردن...</div>
     </div>
 
     <div class="messages-box" id="messagesBox">
-      <div class="message bot">
-        سلام! من دستیار هوش مصنوعی پارادوکس هستم. چطور می‌تونم کمکتون کنم؟
-      </div>
+      <div class="message bot">سلام! من دستیار پارادوکس هستم. چطور می‌تونم کمکتون کنم؟</div>
     </div>
 
     <div class="input-box">
@@ -199,30 +173,18 @@
     const messagesBox = document.getElementById('messagesBox');
     const typingStatus = document.getElementById('typingStatus');
 
-    // غیرفعال کردن کلید Enter برای جلوگیری از ارسال پیام با کیبورد
-    userInput.addEventListener('keydown', function(event) {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-      }
-    });
+    userInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') e.preventDefault(); });
 
     async function sendMessage() {
       const text = userInput.value.trim();
       if (!text) return;
 
-      // ۱. نمایش پیام کاربر
       appendMessage(text, 'user');
       userInput.value = '';
-
-      // ۲. قفل کردن ورودی و دکمه ارسال
       userInput.disabled = true;
       sendBtn.disabled = true;
-
-      // ۳. نمایش انیمیشن تایپ
       typingStatus.style.visibility = 'visible';
 
-      // ۴. ارسال درخواست به ورسل
-      let botResponse = "";
       try {
         const response = await fetch('/api/chat', {
           method: 'POST',
@@ -230,43 +192,38 @@
           body: JSON.stringify({ userMessage: text })
         });
         const data = await response.json();
-        botResponse = data.reply || "مشکلی پیش آمد. دوباره تلاش کنید.";
-      } catch (err) {
-        botResponse = "خطا در برقراری ارتباط با سرور.";
-      }
-
-      // ۵. قانون ۵ ثانیه تاخیر (پاسخ زودتر از ۵ ثانیه ارسال نمی‌شود)
-      setTimeout(() => {
+        
+        setTimeout(() => {
+          typingStatus.style.visibility = 'hidden';
+          appendMessage(data.reply || "خطا در پاسخ", 'bot');
+          startCooldown(14);
+        }, 5000);
+      } catch {
         typingStatus.style.visibility = 'hidden';
-        appendMessage(botResponse, 'bot');
-
-        // ۶. آغاز شمارش معکوس ۱۴ ثانیه‌ای برای فعال‌سازی مجدد
-        startCooldown(14);
-      }, 5000);
+        appendMessage("خطای ارتباطی", 'bot');
+        userInput.disabled = false;
+        sendBtn.disabled = false;
+      }
     }
 
     function appendMessage(text, sender) {
-      const msgDiv = document.createElement('div');
-      msgDiv.classList.add('message', sender);
-      msgDiv.innerText = text;
-      messagesBox.appendChild(msgDiv);
+      const div = document.createElement('div');
+      div.className = `message ${sender}`;
+      div.innerText = text;
+      messagesBox.appendChild(div);
       messagesBox.scrollTop = messagesBox.scrollHeight;
     }
 
-    function startCooldown(seconds) {
-      let remaining = seconds;
-      userInput.placeholder = `لطفاً ${remaining} ثانیه صبر کنید...`;
-      
-      const timer = setInterval(() => {
-        remaining--;
-        if (remaining > 0) {
-          userInput.placeholder = `لطفاً ${remaining} ثانیه صبر کنید...`;
-        } else {
-          clearInterval(timer);
+    function startCooldown(s) {
+      let r = s;
+      const interval = setInterval(() => {
+        r--;
+        if (r > 0) userInput.placeholder = `${r} ثانیه تا ارسال بعدی...`;
+        else {
+          clearInterval(interval);
           userInput.disabled = false;
           sendBtn.disabled = false;
           userInput.placeholder = "پیام خود را بنویسید...";
-          userInput.focus();
         }
       }, 1000);
     }
