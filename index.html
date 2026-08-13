@@ -73,6 +73,60 @@
             transform: translateY(0);
         }
 
+        /* استایل اختصاصی کادر آمار بازدید */
+        .stats-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            text-align: center;
+            background: rgba(22, 22, 22, 0.85);
+            border: 1px solid var(--neon-orange);
+            box-shadow: 0 0 20px var(--neon-orange-glow);
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .stats-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stats-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 107, 0, 0.15);
+        }
+
+        .stats-title {
+            font-size: 0.9rem;
+            color: #CBD5E1;
+            margin-bottom: 6px;
+        }
+
+        .stats-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--neon-orange);
+            text-shadow: 0 0 10px var(--neon-orange);
+            direction: ltr;
+        }
+
+        .stats-timer {
+            font-size: 0.8rem;
+            color: #A0AEC0;
+            margin-top: 6px;
+            direction: ltr;
+            background: rgba(255, 107, 0, 0.1);
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 107, 0, 0.2);
+        }
+
         /* بخش هدر */
         header {
             text-align: center;
@@ -409,6 +463,19 @@
 <body>
 
     <div class="container">
+        <!-- کادر آمار بازدید سایت -->
+        <div class="card stats-card fade-in">
+            <div class="stats-item">
+                <span class="stats-title">تعداد بازدید کل سایت</span>
+                <span class="stats-value" id="total-visits">---</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-title">تعداد بازدید روزانه (۲۴h)</span>
+                <span class="stats-value" id="daily-visits">---</span>
+                <div class="stats-timer" id="reset-timer">ریست تا: --:--:--</div>
+            </div>
+        </div>
+
         <!-- هدر -->
         <header class="fade-in">
             <h1>به پارادوکس شاپ خوش آمدید</h1>
@@ -516,6 +583,56 @@
             }
         }
 
+        // سیستم ثبت و نمایش بازدیدها از طریق واسط ورسل
+        async function recordAndFetchVisits() {
+            try {
+                const res = await fetch('/api/visit', { method: 'POST' });
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('total-visits').innerText = Number(data.total).toLocaleString('fa-IR');
+                    document.getElementById('daily-visits').innerText = Number(data.daily).toLocaleString('fa-IR');
+                }
+            } catch (err) {
+                console.log('خطا در ثبت بازدید:', err);
+            }
+        }
+
+        // تایمر معکوس تا ساعت ۱۲ شب به وقت پاکستان (PKT / UTC+5)
+        function startPakistanCountdown() {
+            function updateTimer() {
+                const now = new Date();
+                
+                // تبدیل زمان فعلی مرورگر به زمان پاکستان
+                const pktString = now.toLocaleString("en-US", { timeZone: "Asia/Karachi" });
+                const pktNow = new Date(pktString);
+                
+                // محاسبه انتهای روز جاری به وقت پاکستان (ساعت ۲۴:۰۰ / ۰۰:۰۰ روز بعد)
+                const pktNextReset = new Date(pktNow);
+                pktNextReset.setHours(24, 0, 0, 0);
+                
+                let diff = Math.floor((pktNextReset - pktNow) / 1000);
+
+                            if (diff <= 0) {
+                    diff = 0;
+                    recordAndFetchVisits(); // رفرش آمار موقع رسیدن به ۱۲ شب
+                }
+
+                const hours = Math.floor(diff / 3600);
+                const minutes = Math.floor((diff % 3600) / 60);
+                const seconds = diff % 60;
+
+                const formattedTime = 
+                    String(hours).padStart(2, '0') + ':' +
+                    String(minutes).padStart(2, '0') + ':' +
+                    String(seconds).padStart(2, '0');
+
+                document.getElementById('reset-timer').innerText = `ریست تا: ${formattedTime}`;
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+
         // دریافت دیتای پویا از API ورسل (جهت اتصال به فایربیس)
         async function fetchDynamicData() {
             try {
@@ -556,6 +673,8 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             adjustDividerWidth();
+            recordAndFetchVisits();
+            startPakistanCountdown();
             fetchDynamicData();
 
             document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
