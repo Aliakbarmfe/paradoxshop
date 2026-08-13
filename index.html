@@ -27,12 +27,10 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      margin: 0;
     }
 
-    /* گوی ثابت و جدا شده از لایه چت */
     .glowing-orb {
-      position: fixed; /* این باعث می‌شود کادر چت تکان نخورد */
+      position: fixed;
       top: 50%;
       left: 50%;
       width: 350px;
@@ -50,7 +48,6 @@
       100% { transform: translate(50px, 100px); }
     }
 
-    /* کانتینر چت - کاملاً ثابت */
     .chat-container {
       width: 90%;
       max-width: 500px;
@@ -61,7 +58,7 @@
       border-radius: 16px;
       display: flex;
       flex-direction: column;
-      z-index: 1; /* بالاتر از پس‌زمینه */
+      z-index: 1;
       position: relative;
     }
 
@@ -71,6 +68,27 @@
       border-bottom: 1px solid var(--neon-orange);
       color: var(--neon-orange);
       font-weight: bold;
+      position: relative;
+    }
+
+    /* استایل دکمه خروج */
+    .exit-btn {
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      background: transparent;
+      border: 1px solid var(--neon-orange);
+      color: var(--neon-orange);
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .exit-btn:hover {
+      background: var(--neon-orange);
+      color: #000;
     }
 
     .typing-status {
@@ -78,6 +96,7 @@
       color: #ffaa66;
       height: 15px;
       visibility: hidden;
+      margin-top: 5px;
     }
 
     .messages-box {
@@ -116,7 +135,7 @@
       outline: none;
     }
 
-    button {
+    button#sendBtn {
       background: var(--neon-orange);
       border: none;
       padding: 8px 15px;
@@ -132,6 +151,8 @@
 
   <div class="chat-container">
     <div class="header">
+      <!-- دکمه خروج اضافه شد -->
+      <button class="exit-btn" onclick="window.location.href='index.html'">خروج</button>
       <div>دستیار هوش مصنوعی پارادوکس</div>
       <div id="typingStatus" class="typing-status">در حال تایپ کردن...</div>
     </div>
