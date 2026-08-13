@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پارادوکس شاپ | PARADOX STORE</title>
+    <!-- Vazirmatn Font -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        :root {
+            --bg-black: #000000;
+            --neon-orange: #FF6B00;
+            --neon-orange-glow: rgba(255, 107, 0, 0.4);
+            --neon-purple: #B026FF;
+            --neon-purple-glow: rgba(176, 38, 255, 0.6);
+            --text-white: #FFFFFF;
+            --card-bg: rgba(18, 18, 18, 0.75);
+            --card-border: rgba(255, 107, 0, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Vazirmatn', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-white);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding-bottom: 90px;
+        }
+
+        /* پس زمینه با گرادینت متحرک نارنجی در سمت چپ پایین */
+        body::before {
+            content: '';
+            position: fixed;
+            bottom: -150px;
+            left: -150px;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(255, 107, 0, 0.28) 0%, rgba(255, 107, 0, 0.08) 45%, transparent 75%);
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(40px);
+            animation: pulseGlow 8s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.8; }
+            100% { transform: scale(1.15) translate(30px, -30px); opacity: 1; }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 25px 15px;
+        }
+
+        /* انیمیشن لود و ورودی عناصر */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* بخش هدر */
+        header {
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 35px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-white);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+            margin-bottom: 12px;
+        }
+
+        .header-divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-orange), transparent);
+            box-shadow: 0 0 12px var(--neon-orange);
+            border: none;
+            margin: 0 auto 12px auto;
+            width: 85%;
+            border-radius: 2px;
+        }
+
+        .brand-subtitle {
+            font-size: 1.7rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: var(--neon-orange);
+            text-shadow: 0 0 12px var(--neon-orange), 0 0 25px var(--neon-orange-glow);
+            font-family: Arial, sans-serif;
+        }
+
+        /* استایل عمومی کادرها */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.67), inset 0 0 15px rgba(255, 107, 0, 0.05);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--neon-orange);
+            box-shadow: 0 10px 35px 0 rgba(255, 107, 0, 0.25);
+        }
+
+        /* هایلایت نئونی کلمات */
+        .neon-highlight {
+            color: var(--neon-orange);
+            font-weight: 800;
+            text-shadow: 0 0 8px var(--neon-orange);
+            display: inline-block;
+        }
+
+        .intro-card p {
+            line-height: 1.95;
+            font-size: 1.05rem;
+            text-align: justify;
+            color: #E2E8F0;
+        }
+
+        /* تیتر سوالی */
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            text-align: center;
+            margin-top: 35px;
+            margin-bottom: 8px;
+            color: var(--text-white);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+        }
+
+        .section-divider {
+            height: 2px;
+            background: var(--neon-orange);
+            box-shadow: 0 0 8px var(--neon-orange);
+            border: none;
+            margin: 0 auto 25px auto;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        /* شبکه کارت‌های ویژگی‌ها */
+        .feature-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-white);
+        }
+
+        .feature-icon {
+            color: var(--neon-purple);
+            font-size: 1.4rem;
+            filter: drop-shadow(0 0 8px var(--neon-purple));
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-card p {
+            line-height: 1.85;
+            font-size: 0.98rem;
+            color: #CBD5E1;
+            text-align: justify;
+        }
+
+        /* کادر اطلاعات شاپ */
+        .info-card h3 {
+            text-align: center;
+            font-size: 1.25rem;
+            color: var(--neon-orange);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--neon-orange-glow);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            direction: rtl;
+        }
+
+        .info-row:last-of-type {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 0.98rem;
+            color: #E2E8F0;
+        }
+
+        .info-value {
+            direction: ltr;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #FFFFFF;
+            cursor: pointer;
+            transition: color 0.2s, text-shadow 0.2s;
+            text-decoration: none;
+        }
+
+        .info-value:hover {
+            color: var(--neon-orange);
+            text-shadow: 0 0 8px var(--neon-orange);
+        }
+
+        /* دکمه گروه */
+        .group-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #FF6B00 0%, #CC5200 100%);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--neon-orange-glow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-align: center;
+        }
+
+        .group-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px var(--neon-orange);
+        }
+
+        /* دکمه شناور پشتیبانی آنلاین */
+        .floating-support {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(18, 18, 18, 0.9);
+            border: 2px solid var(--neon-orange);
+            color: var(--text-white);
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none;
+            box-shadow: 0 0 20px var(--neon-orange-glow);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .floating-support::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: #00FF66;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00FF66;
+        }
+
+        .floating-support:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 28px var(--neon-orange);
+        }
+
+        /* پاپ آپ (Modal) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-box {
+            background: #121212;
+            border: 1.5px solid var(--neon-orange);
+            border-radius: 20px;
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 35px var(--neon-orange-glow);
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-box h4 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: #FFFFFF;
+        }
+
+        .modal-box p {
+            font-size: 0.95rem;
+            color: #A0AEC0;
+            margin-bottom: 22px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-copy {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--neon-orange);
+            border: 1px solid var(--neon-orange);
+        }
+
+        .btn-copy:hover {
+            background: var(--neon-orange);
+            color: #FFFFFF;
+        }
+
+        .btn-open {
+            background: var(--neon-orange);
+            color: #FFFFFF;
+            box-shadow: 0 0 10px var(--neon-orange-glow);
+        }
+
+        .btn-open:hover {
+            box-shadow: 0 0 18px var(--neon-orange);
+        }
+
+        /* پیام اعلان کپی Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #1A1A1A;
+            border: 1px solid var(--neon-orange);
+            color: var(--text-white);
+            padding: 10px 22px;
+            border-radius: 30px;
+            box-shadow: 0 0 15px var(--neon-orange-glow);
+            font-size: 0.9rem;
+            z-index: 20000;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- هدر -->
+        <header class="fade-in">
+            <h1>به سایت پارادوکس خوش آمدید</h1>
+            <hr class="header-divider">
+            <div class="brand-subtitle">PaRaDoX</div>
+        </header>
+
+        <!-- معرفی نامه -->
+        <div class="card intro-card fade-in">
+            <p>
+                شاپ پارادوکس با بیش از ۵ سال سابقه درخشان در حوزه خرید و فروش انواع خدمات دیجیتال، اکانت‌های بازی (از جمله فری فایر)، گروه‌ها و کانال‌ها، همراه همیشگی شماست. ما تجربه معاملاتی بی‌نظیر را با بالاترین <span class="neon-highlight">سرعت</span> در انجام سفارشات، تضمین صددرصدی <span class="neon-highlight">امنیت</span> در واسطه‌گری و همچنین ارائه‌دهنده <span class="neon-highlight">قیمت منصفانه</span> برای شما خریداران و فروشندگان محترم فراهم کرده‌ایم.
+            </p>
+        </div>
+
+        <!-- سوال انتخاب -->
+        <div class="fade-in">
+            <h2 class="section-title" id="why-title">چرا پارادوکس بهترین انتخاب است؟</h2>
+            <hr class="section-divider" id="why-divider">
+        </div>
+
+        <!-- کارت‌های ۳ گانه ویژگی‌ها -->
+        <div class="card feature-card fade-in">
+            <div class="feature-header">
+                <span class="feature-icon">⚡</span>
+                <span>سرعت</span>
+            </div>
+            <p>
+                تمامی معاملات، خریدهای مستقیم و فرآیندهای واسطه‌گری در پارادوکس شاپ با بالاترین سرعت ممکن انجام می‌شوند. تیم پشتیبانی فعال ما بلافاصله پس از ثبت درخواست، مراحل تحویل و انتقال را بدون معطلی و در سریع‌ترین زمان پیگیری و به پایان می‌رساند.
+            </p>
+        </div>
+
+        <div class="card feature-card fade-in">
+            <div class="feature-header">
+                <span class="feature-icon">🔒</span>
+                <span>امنیت</span>
+            </div>
+            <p>
+                حفظ امنیت سرمایه و اطلاعات شما اولویت اول ماست. سیستم واسطه‌گری تخصصی پارادوکس با متدهای احراز هویت هوشمندانه و نظارت کامل بر روند معامله، فضایی ۱۰۰٪ امن و عاری از هرگونه کلاهبرداری را برای شما به ارمغان می‌آورد.
+            </p>
+        </div>
+
+        <div class="card feature-card fade-in">
+            <div class="feature-header">
+                <span class="feature-icon">💜</span>
+                <span>قیمت منصفانه</span>
+            </div>
+            <p>
+                ما در پارادوکس شاپ همواره تلاش می‌کنیم نرخ‌ها را کاملاً منصفانه، واقعی و رقابتی نگه داریم. تعرفه‌ها با ارزیابی دقیق بازار تعیین می‌شوند تا خریداران و فروشندگان بتوانند بهترین ارزش را در قبال معاملات خود دریافت کنند.
+            </p>
+        </div>
+
+        <!-- اطلاعات شاپ -->
+        <div class="card info-card fade-in">
+            <h3>اطلاعات شاپ پارادوکس</h3>
+            
+            <div class="info-row">
+                <span class="info-label">شماره تلفن شاپ:</span>
+                <span class="info-value" id="phone-val" onclick="copyText('09038547091')">09038547091</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">اطلاعات شاپ:</span>
+                <a href="https://rubika.ir/PARADOX_STORE" target="_blank" class="info-value" id="info-channel">@PARADOX_STORE</a>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">شاپ خرید و فروش:</span>
+                <a href="https://rubika.ir/Paradox_Shop_ff" target="_blank" class="info-value" id="shop-channel">@Paradox_Shop_ff</a>
+            </div>
+
+            <button class="group-btn" onclick="openGroupModal()">گروه پارادوکس شاپ (کلیک کن)</button>
+        </div>
+    </div>
+
+    <!-- دکمه شناور پشتیبانی -->
+    <a href="posht.html" class="floating-support">
+        پشتیبانی آنلاین
+    </a>
+
+    <!-- پاپ آپ گروه -->
+    <div class="modal-overlay" id="groupModal">
+        <div class="modal-box">
+            <h4>گروه پارادوکس شاپ</h4>
+            <p>علاقه‌مند به ورود به گروه هستید؟ یکی از گزینه‌های زیر را انتخاب کنید:</p>
+            <div class="modal-actions">
+                <button class="modal-btn btn-copy" onclick="copyGroupLink()">کپی لینک</button>
+                <button class="modal-btn btn-open" onclick="openGroupLink()">باز کردن لینک</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">لینک کپی شد!</div>
+
+    <script>
+        // مقدار اولیه لینک گروه
+        let groupLink = "https://rubika.ir/joing/FHJJEGHA0EWFOXYCGSXXWTTJBSLHSTVW";
+
+        // تنظیم خط جداکننده به طول تیتر
+        function adjustDividerWidth() {
+            const title = document.getElementById('why-title');
+            const divider = document.getElementById('why-divider');
+            if (title && divider) {
+                divider.style.width = title.offsetWidth + 'px';
+            }
+        }
+
+        // دریافت دیتای پویا از API ورسل (جهت اتصال به فایربیس)
+        async function fetchDynamicData() {
+            try {
+                const res = await fetch('/api/get-data');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.phone) {
+                        document.getElementById('phone-val').innerText = data.phone;
+                        document.getElementById('phone-val').setAttribute('onclick', `copyText('${data.phone}')`);
+                    }
+                    if (data.infoChannel) {
+                        const info = document.getElementById('info-channel');
+                        info.innerText = data.infoChannel;
+                        info.href = `https://rubika.ir/${data.infoChannel.replace('@', '')}`;
+                    }
+                    if (data.shopChannel) {
+                        const shop = document.getElementById('shop-channel');
+                        shop.innerText = data.shopChannel;
+                        shop.href = `https://rubika.ir/${data.shopChannel.replace('@', '')}`;
+                    }
+                    if (data.groupLink) {
+                        groupLink = data.groupLink;
+                    }
+                }
+            } catch (err) {
+                console.log('استفاده از اطلاعات پیش‌فرض مقادیر شاپ.');
+            }
+        }
+
+        // انیمیشن ظهور عناصر موقع اسکرول
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            adjustDividerWidth();
+            fetchDynamicData();
+
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        });
+
+        window.addEventListener('resize', adjustDividerWidth);
+
+        // مدیریت پاپ آپ (Modal)
+        function openGroupModal() {
+            document.getElementById('groupModal').classList.add('active');
+        }
+
+        function closeGroupModal() {
+            document.getElementById('groupModal').classList.remove('active');
+        }
+
+        document.getElementById('groupModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeGroupModal();
+            }
+        });
+
+        // اکشن کپی و باز کردن لینک گروه
+        function copyGroupLink() {
+            navigator.clipboard.writeText(groupLink).then(() => {
+                showToast('لینک گروه با موفقیت کپی شد!');
+                closeGroupModal();
+            });
+        }
+
+        function openGroupLink() {
+            window.open(groupLink, '_blank');
+            closeGroupModal();
+        }
+
+        // کپی متن دسکتاپ و موبایل
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`شماره ${text} کپی شد`);
+            });
+        }
+
+        // سیستم Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+    </script>
+</body>
+  </html>
+  
